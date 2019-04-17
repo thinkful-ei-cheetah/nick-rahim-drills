@@ -20,25 +20,39 @@ export default class Accordian extends React.Component {
     ]
   };
 
-  static state = {
-    itemClicked: 1
+  state = {
+    itemClicked: null
+  }
+
+  setSectionClicked(index) {
+    console.log('setSectionClicked ' + index);
+    this.setState({ itemClicked: index + 1 });
   };
 
-  setSectionClicked = id => {
-    this.setState({ itemClicked: id });
-    // return this.props.sections[this.state.itemClicked].content;
-  };
+  renderButtons() {
+    return this.props.sections.map((section, index) => (
+        <button key={index} onClick={() => this.setSectionClicked(index)}>
+          {section.title}
+        </button>
+    ))
+  }
+
+  renderContent() {
+    const currentSection = this.props.sections[this.state.itemClicked - 1];
+
+    return (
+      <p>
+        {currentSection.content}
+      </p>
+    );
+  }
 
   render() {
-    const list = this.props.sections.map((element, index) => {
-      return (
-        <li>
-          <button key={index} onClick={() => this.setSectionClicked(index)}>
-            {element.title}
-          </button>
-        </li>
-      );
-    });
-    return <ul>{list}</ul>;
+    return(
+      <ul>
+        {this.renderButtons()}
+        {this.state.itemClicked && this.renderContent()}
+      </ul>
+    );
   }
 }
